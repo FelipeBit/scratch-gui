@@ -1,0 +1,93 @@
+@import "../../css/units.css";
+@import "../../css/colors.css";
+@import "../../css/z-index.css";
+
+.grid {
+    width: 100%;
+    padding-bottom: 20px;
+    display: grid;
+    grid-template-columns:2fr 1fr;
+    grid-template-rows: 1fr  ;
+    align-content: flex-end;
+    position: absolute;
+    bottom: 0;
+}
+
+.nested-grid {
+    display: grid;
+    grid-template-columns:1fr;
+    grid-template-rows: 1fr 100px;
+}
+
+.nested-list-grid {
+    display: grid;
+    grid-template-columns:1fr;
+}
+
+.item {
+	margin: 5px;
+	text-align: center;
+    font-size: 14px;
+}
+
+.container {
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    z-index: 2;
+    background-color: red;
+}
+
+.scratch-cat-wrapper {
+    width: 50%;
+}
+
+.scratch-cat-icon {
+
+
+    height: 75px;
+    width: 75px;
+
+
+}
+
+.scratch-cat-icon:hover {
+    cursor: pointer;
+}
+.speech-bubble {
+    word-wrap: break-word;
+    padding: 5px;
+    text-align: center;
+	position: relative;
+	background: #FFAC3C;
+    border-radius: .4em;
+    z-index: 2;
+    height: auto;
+    width: 200px;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-top-color: #FFAC3C;
+	border-bottom: 0;
+	border-right: 0;
+	margin-left: -20px;
+	margin-bottom: -20px;
+}
+
+.div-block{
+
+}
+
+.tips-categories {
+    background-color: blueviolet;
+    width: 20px;
+height: 20px;
+border-radius: 50%;align-self: center;
+}

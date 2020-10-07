@@ -142,5 +142,9 @@
       "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js",
       "editor-msgs(\\.js)?$": "<rootDir>/test/__mocks__/editor-msgs-mock.js"
     }
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "react-markdown": "^4.3.1"
   }
 }
