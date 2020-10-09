@@ -37,10 +37,11 @@ const SpeechBubble = () =>
         </div>)
 ;
 
-
+/*
 SpeechBubble.propTypes = {
     content: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.string])
 };
+*/
 
 class ScratchBuddy extends React.Component {
     constructor (props) {
