@@ -3,32 +3,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 
+import ScratchBuddyStaticTips from './scratch-buddy-static-tips.jsx';
 import scratchCatIcon from './scratch-cat.png';
 import styles from './scratch-buddy.css';
 import api from './api';
 
-const SpeechBubble = props => {
-    const {content} = props;
+const SpeechBubble = () =>
+// const {content} = props;
 
-    const isArray = typeof content !== 'string';
-    let tipsList;
+// const isArray = typeof content !== 'string';
+/* let tipsList;
 
     if (isArray) {
-        tipsList = props.content.map(item =>
-            <div key={item.id}>{item.displaySequence}</div>
+        tipsList = content.map(item =>
+            (<div key={item.id}>
+                <img
+                    heigth={'50'}
+                    width={'50'}
+                    src={`${item.file.path}${item.file.name}`}
+                />
+            </div>)
         );
-    }
+    }*/
 
-    return (
+    (
         <div className={styles.speechBubble}>
             <section className={styles.nestedListGrid}>
-                {isArray ? tipsList : <ReactMarkdown source={content} />}
-                {/* <div className={styles.item}><div className={styles.tipsCategories}>1</div></div>
-
-             <ReactMarkdown source={input} />*/}
+                <ScratchBuddyStaticTips />
+                {/* isArray ?
+                    <ScratchBuddyStaticTips tipsList={content} /> :
+                <ReactMarkdown source={content} />*/}
             </section>
-        </div>);
-};
+        </div>)
+;
+
 
 SpeechBubble.propTypes = {
     content: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.string])
@@ -38,8 +46,8 @@ class ScratchBuddy extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            speechBubbleOpen: false,
-            speechBubbleContent: ''
+            speechBubbleManualOpen: false,
+            speechBubbleDynamicOpen: false
         };
         this.handleClick = this.handleClick.bind(this);
     }
@@ -51,11 +59,11 @@ class ScratchBuddy extends React.Component {
                 const {data} = response;
 
                 if (!data) {
-                    this.setState({speechBubbleContent: ''});
+                    this.setState({speechBubbleStaticContent: ''});
                     return;
                 }
 
-                this.setState({speechBubbleContent: data});
+                localStorage.setItem('staticTips', JSON.stringify(data));
             })
             .catch(error => {
                 // handle error
@@ -67,7 +75,7 @@ class ScratchBuddy extends React.Component {
 
     handleClick () {
         this.setState({
-            speechBubbleOpen: !this.state.speechBubbleOpen
+            speechBubbleManualOpen: !this.state.speechBubbleManualOpen
         });
     }
     render () {
@@ -77,8 +85,11 @@ class ScratchBuddy extends React.Component {
                 <div className={styles.item}>
                     <section className={styles.nestedGrid}>
                         <div className={styles.item}>
-                            {this.state.speechBubbleOpen ?
-                                <SpeechBubble content={this.state.speechBubbleContent} /> :
+                            {this.state.speechBubbleManualOpen || this.state.speechBubbleDynamicOpen ?
+                                (this.state.speechBubbleManualOpen ?
+                                    <SpeechBubble /* content={this.state.speechBubbleStaticContent}*/ /> :
+                                    null // <SpeechBubble content={this.state.speechBubbleDynamicContent} />
+                                ) :
                                 null}
                         </div>
                         <div
@@ -92,7 +103,6 @@ class ScratchBuddy extends React.Component {
                         </div>
                     </section>
                 </div>
-
             </section>
         );
     }
