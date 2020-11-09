@@ -44,7 +44,7 @@ class DragRecognizer {
     gestureInProgress () {
         return this._gestureState !== DragRecognizer.STATE_UNIDENTIFIED;
     }
-    
+
     reset () {
         this._unbindListeners();
         this._initialOffset = null;
@@ -71,7 +71,8 @@ class DragRecognizer {
     }
 
     _handleMove (event) {
-        // For gestures identified as vertical scrolls, do not process movement events
+        // For gestures identified as vertical scrolls, do not process movement events++++++++++++++++++++++++++++++++++++++++++
+        console.log('event=>', event);
         if (this._isScroll()) return;
 
         const currentOffset = getEventXY(event);

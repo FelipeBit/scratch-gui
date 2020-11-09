@@ -53,6 +53,7 @@ const defineDynamicBlock = (ScratchBlocks, categoryInfo, staticBlockInfo, extend
         this.blockInfoText = blockInfoText;
         const blockInfo = JSON.parse(blockInfoText);
 
+
         switch (blockInfo.blockType) {
         case BlockType.COMMAND:
         case BlockType.CONDITIONAL:

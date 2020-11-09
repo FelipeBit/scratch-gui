@@ -61,17 +61,47 @@ class ScratchBuddyStaticTips extends React.Component {
             selectedTipText
         });
 
+        const allLis = document.querySelectorAll('g.blocklyBlockCanvas');
+
+        console.log('Aqui', allLis);
+        console.log(allLis[0].children[0]);
+
+        const blocksWrappers = allLis[0].children;
+        /*
+        allLis[0].children.forEach(element => {
+            confirm.log('wraper de blocoss', element);
+        });
+        */
+        console.log(allLis[0].children.length);
+
+        for (let index = 0; index < blocksWrappers.length; index++) {
+            const element = blocksWrappers[index];
+            console.log('Blocos => ', element);
+            const s = new XMLSerializer();
+            const str = s.serializeToString(element);
+            console.log('stringfied', str);
+
+            console.log((str.split(new RegExp('data-category="motion"' /* 'texto da tag' ou 'data-category="motion"'/, 'gi')).length - 1));
+
+
+        }
+
+
         if ('speechSynthesis' in window && !this.state.tipOpen) {
             // Synthesis support. Make your web apps talk!
+            console.log('TESTE');
 
             const utterance = new SpeechSynthesisUtterance();
 
             utterance.text = selectedTipText;
             utterance.lang = 'pt-br';
+            utterance.rate = 0.9;
             utterance.pitch = 3;
 
             speechSynthesis.speak(utterance);
 
+        } else {
+            speechSynthesis.cancel();
         }
     }
 

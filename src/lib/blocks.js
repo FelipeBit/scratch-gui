@@ -286,6 +286,7 @@ export default function (vm) {
         const json = jsonForMenuBlock('DISTANCETOMENU', spriteMenu, sensingColors, [
             [mouse, '_mouse_']
         ]);
+        console.log('JSON=>', json);
         this.jsonInit(json);
     };
 

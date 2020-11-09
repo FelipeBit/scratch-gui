@@ -117,6 +117,7 @@ class Blocks extends React.Component {
         // the xml can change while e.g. on the costumes tab.
         this._renderedToolboxXML = this.props.toolboxXML;
 
+
         // we actually never want the workspace to enable "refresh toolbox" - this basically re-renders the
         // entire toolbox every time we reset the workspace.  We call updateToolbox as a part of
         // componentDidUpdate so the toolbox will still correctly be updated
@@ -396,6 +397,8 @@ class Blocks extends React.Component {
     }
     handleExtensionAdded (categoryInfo) {
         const defineBlocks = blockInfoArray => {
+            // to-do
+            console.log('blockinfo=>', blockInfoArray);
             if (blockInfoArray && blockInfoArray.length > 0) {
                 const staticBlocksJson = [];
                 const dynamicBlocksInfo = [];
@@ -405,6 +408,7 @@ class Blocks extends React.Component {
                     } else if (blockInfo.json) {
                         staticBlocksJson.push(blockInfo.json);
                     }
+
                     // otherwise it's a non-block entry such as '---'
                 });
 
@@ -497,6 +501,7 @@ class Blocks extends React.Component {
         ws.toolbox_.scrollToCategoryById('myBlocks');
     }
     handleDrop (dragInfo) {
+        console.log('drag=>', dragInfo);
         fetch(dragInfo.payload.bodyUrl)
             .then(response => response.json())
             .then(blocks => this.props.vm.shareBlocksToTarget(blocks, this.props.vm.editingTarget.id))

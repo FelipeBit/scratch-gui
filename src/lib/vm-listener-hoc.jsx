@@ -79,6 +79,7 @@ const vmListenerHOC = function (WrappedComponent) {
             }
         }
         handleTargetsUpdate (data) {
+            console.log('update =>', data);
             if (this.props.shouldUpdateTargets) {
                 this.props.onTargetsUpdate(data);
             }

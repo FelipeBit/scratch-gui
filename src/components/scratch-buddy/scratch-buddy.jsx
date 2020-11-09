@@ -1,4 +1,5 @@
 /* eslint-disable react/prefer-stateless-function */
+import ReactDOM from 'react-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
@@ -54,6 +55,7 @@ class ScratchBuddy extends React.Component {
     }
 
     componentDidMount () {
+
         api.get('/static-tips')
             .then(response => {
                 // handle success
