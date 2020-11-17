@@ -16,7 +16,19 @@
 .nested-grid {
     display: grid;
     grid-template-columns:1fr;
-    grid-template-rows: 1fr 100px;
+    grid-template-rows: 1fr 95px;
+}
+
+.nested-grid-buttons {
+    display: grid;
+    grid-template-columns:2fr 1fr 1fr 2fr;
+    grid-template-rows: 1fr 30px;
+}
+
+.nested-grid-balloon {
+    display: grid;
+    grid-template-columns:1fr 1fr 1fr;
+    grid-template-rows: 1fr ;
 }
 
 .nested-list-grid {
@@ -43,15 +55,20 @@
 }
 
 .scratch-cat-icon {
-
-
-    height: 75px;
-    width: 75px;
-
-
+    height: 90px;
+    width: 90px;
 }
 
 .scratch-cat-icon:hover {
+    cursor: pointer;
+}
+
+.scratch-cat-opt-icon {
+    height: 35px;
+    width: 35px;
+}
+
+.scratch-cat-opt-icon:hover {
     cursor: pointer;
 }
 .speech-bubble {
@@ -88,6 +105,22 @@
 .tips-categories {
     background-color: blueviolet;
     width: 20px;
-height: 20px;
-border-radius: 50%;align-self: center;
+    height: 20px;
+    border-radius: 50%;
+    align-self: center;
+}
+
+@media (min-width: 1300px)
+{
+    .grid {
+        width: 100%;
+        padding-bottom: 20px;
+        display: grid;
+        grid-template-columns:2fr 1fr;
+        grid-template-rows: 1fr  ;
+        align-content: flex-end;
+        position: absolute;
+        bottom: 0;
+    }
+
 }

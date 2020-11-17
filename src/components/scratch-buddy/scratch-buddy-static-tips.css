@@ -6,3 +6,11 @@
     cursor: pointer;
     margin: 10px;
 }
+
+.closeButton{
+    cursor: pointer;
+    background-color: orange;
+    border-radius: 50px;
+    font-weight: bolder;
+    color: white;
+}

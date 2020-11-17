@@ -11,7 +11,6 @@ const BlocksComponent = props => {
         ...componentProps
     } = props;
     // to-do
-    console.log(props);
     return (
         <Box
             className={classNames(styles.blocks, {

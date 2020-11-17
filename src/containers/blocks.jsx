@@ -247,6 +247,7 @@ class Blocks extends React.Component {
     }
 
     attachVM () {
+        console.log('listener', this.props.vm.blockListener);
         this.workspace.addChangeListener(this.props.vm.blockListener);
         this.flyoutWorkspace = this.workspace
             .getFlyout()
