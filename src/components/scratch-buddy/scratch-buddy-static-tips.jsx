@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import api from './api';
 import styles from './scratch-buddy-static-tips.css';
 import ScratchBuddySpinner from '../scratch-buddy-spinner/scratch-buddy-spinner.jsx';
+
 class ScratchBuddyStaticTips extends React.Component {
     constructor (props) {
         super(props);
@@ -61,39 +62,25 @@ class ScratchBuddyStaticTips extends React.Component {
             selectedTipText
         });
 
-        // const allLis = document.querySelectorAll('g.blocklyBlockCanvas');
-        // const blocksWrappers = allLis[0].children;
-        /*
-        allLis[0].children.forEach(element => {
-            confirm.log('wraper de blocoss', element);
-        });
-
-
-        for (let index = 0; index < blocksWrappers.length; index++) {
-            const element = blocksWrappers[index];
-            console.log('Blocos => ', element);
-            const s = new XMLSerializer();
-            const str = s.serializeToString(element);
-            console.log('stringfied', str);
-            console.log((str.split(new RegExp('data-category="motion"' /* 'texto da tag' ou 'data-category="motion"', 'gi')).length - 1));
-        }
-        */
-
 
         if ('speechSynthesis' in window && !this.state.tipOpen) {
-            // Synthesis support. Make your web apps talk!
-            const utterance = new SpeechSynthesisUtterance();
 
-            utterance.text = selectedTipText;
-            utterance.lang = 'pt-br';
-            // utterance.rate = 0.9;
-            utterance.pitch = 3;
+            if (this.props.soundIsOn){
+                const utterance = new SpeechSynthesisUtterance();
 
-            speechSynthesis.speak(utterance);
+                utterance.text = selectedTipText;
+                utterance.lang = 'pt-br';
+                // utterance.rate = 0.9;
+                utterance.pitch = 3;
+
+                speechSynthesis.speak(utterance);
+            }
 
         } else {
+            speechSynthesis.pause();
             speechSynthesis.cancel();
         }
+
     }
 
     render () {
@@ -105,7 +92,7 @@ class ScratchBuddyStaticTips extends React.Component {
                     (
                         this.state.tipOpen ?
                             (<>
-                                <div>
+                                <div className={styles.buttonDiv}>
                                     <button
                                         className={styles.closeButton}
                                         onClick={() => this.handleClick('', '')}
@@ -114,8 +101,18 @@ class ScratchBuddyStaticTips extends React.Component {
                                 <div>
                                     <ReactMarkdown source={this.state.selectedTipMarkdowntext} />
                                 </div>
-                            </>) :
-                            this.state.tipsList
+                            </>) : (<>
+                                <div className={styles.buttonDiv}>
+                                    <button
+                                        className={styles.closeButton}
+                                        onClick={() => this.props.func()}
+                                    >{'X'}</button>
+                                </div>
+                                <div>
+                                    {this.state.tipsList}
+                                </div>
+                            </>)
+
                     )
                 }
             </div>
@@ -123,5 +120,10 @@ class ScratchBuddyStaticTips extends React.Component {
         );
     }
 }
+
+ScratchBuddyStaticTips.propTypes = {
+    soundIsOn: PropTypes.bool,
+    func: PropTypes.func
+};
 
 export default ScratchBuddyStaticTips;

@@ -13,31 +13,52 @@ import tipsOnIcon from './turn-on.png';
 import tipsOffIcon from './turn-off.png';
 import styles from './scratch-buddy.css';
 import api from './api';
+import scratchSpeechSynthesis from './speech-synthesis';
+import {alertIsPresent} from 'selenium-webdriver/lib/until';
 
-const SpeechBubbleManual = () =>
-
-    (<div className={styles.speechBubble}>
-        <section className={styles.nestedListGrid}>
-            <ScratchBuddyStaticTips />
-            {/* scratch buddy messages*/}
-        </section>
-    </div>)
-;
-
-const SpeechBubbleDynamic = ({tip, secondsOpen, func}) => {
-
-    setTimeout(func, (secondsOpen * 1000));
+const SpeechBubbleManual = ({tipsIsOn, soundIsOn, func}) => {
+    if (!tipsIsOn) return null;
 
     return (<div className={styles.speechBubble}>
         <section className={styles.nestedListGrid}>
-            <p>{tip}</p>
+            <ScratchBuddyStaticTips
+                soundIsOn={soundIsOn}
+                func={func}
+            />
         </section>
     </div>);
+}
+;
 
+SpeechBubbleManual.propTypes = {
+    tipsIsOn: PropTypes.bool,
+    soundIsOn: PropTypes.bool,
+    func: PropTypes.func
+};
+
+const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
+    // MOSTRA MENSAGEM POR X SEGUNDOS, CONFORME DEFINIDO NO REGISTRO DO BANCO
+    if (!tipsIsOn) return null;
+
+    if (soundIsOn) {
+        scratchSpeechSynthesis(tip);
+    }
+
+    setTimeout(func, (secondsOpen * 1000));
+
+    return (
+        <div className={styles.speechBubble}>
+            <section className={styles.nestedListGrid}>
+                <p>{tip}</p>
+            </section>
+        </div>
+    );
 };
 
 SpeechBubbleDynamic.propTypes = {
+    tipsIsOn: PropTypes.bool,
     tip: PropTypes.string,
+    soundIsOn: PropTypes.bool,
     secondsOpen: PropTypes.number,
     func: PropTypes.func
 };
@@ -93,6 +114,7 @@ class ScratchBuddy extends React.Component {
         this.handleTipsOptionClick = this.handleTipsOptionClick.bind(this);
         this.handleSoundOptionClick = this.handleSoundOptionClick.bind(this);
         this.closeDynamicBubble = this.closeDynamicBubble.bind(this);
+        this.closeManualBubble = this.closeManualBubble.bind(this);
     }
 
     componentDidMount () {
@@ -110,19 +132,14 @@ class ScratchBuddy extends React.Component {
             })
             .catch(error => {
                 // handle error
-            })
-            .then(() => {
-                // always executed
             });
 
-
+        // VERIFICA SE ALGUMA PEÇA FOI MOVIDA OU INSERIDA
         window.setInterval(() => {
             const lastBlockInserted = localStorage.getItem('lastBlockInserted');
             const lastBlockMessage = localStorage.getItem('lastBlockMessage');
             const blocksArray = localStorage.getItem('blocks');
             let blockTimesMoved = 0;
-
-            // console.log('blocksArray', blocksArray);
 
             if (blocksArray) {
                 blockTimesMoved = JSON.parse(blocksArray).find(block =>
@@ -131,8 +148,6 @@ class ScratchBuddy extends React.Component {
             } else {
                 blockTimesMoved = 0;
             }
-
-            // console.log('timesMoved', blockTimesMoved.timesMoved);
 
             if (blockTimesMoved && blockTimesMoved.timesMoved === 1) {
                 if (!this.state.speechBubbleManualOpen && !this.state.speechBubbleDynamicOpen){
@@ -146,6 +161,7 @@ class ScratchBuddy extends React.Component {
                             dynamicTip: tip.opcode,
                             speechBubbleDynamicOpen: true
                         });
+
                         // FAZ CHAMADA API
 
                     }
@@ -194,7 +210,18 @@ class ScratchBuddy extends React.Component {
         this.setState({
             speechBubbleDynamicOpen: false
         });
+        scratchSpeechSynthesis('', true);
+
         return;
+    }
+
+    closeManualBubble () {
+
+        this.setState({
+            speechBubbleManualOpen: false
+        });
+
+
     }
 
     render () {
@@ -207,10 +234,16 @@ class ScratchBuddy extends React.Component {
                             <div className={styles.item} />
                             <div className={styles.item}>
                                 {this.state.speechBubbleManualOpen ?
-                                    <SpeechBubbleManual /* content={this.state.speechBubbleStaticContent}*/ /> :
+                                    <SpeechBubbleManual
+                                        tipsIsOn={this.state.tipsIsOn}
+                                        soundIsOn={this.state.soundIsOn}
+                                        func={this.closeManualBubble}
+                                    /> :
                                     (this.state.speechBubbleDynamicOpen ?
                                         <SpeechBubbleDynamic
+                                            tipsIsOn={this.state.tipsIsOn}
                                             tip={this.state.dynamicTip}
+                                            soundIsOn={this.state.soundIsOn}
                                             secondsOpen={3}
                                             func={this.closeDynamicBubble}
                                         /> :
