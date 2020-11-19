@@ -1,8 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
-import ReactDOM from 'react-dom';
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
 
 import ScratchBuddyStaticTips from './scratch-buddy-static-tips.jsx';
 import scratchCatIconOn from './scratch-cat.png';
@@ -14,7 +13,7 @@ import tipsOffIcon from './turn-off.png';
 import styles from './scratch-buddy.css';
 import api from './api';
 import scratchSpeechSynthesis from './speech-synthesis';
-import {alertIsPresent} from 'selenium-webdriver/lib/until';
+import ScratchMarkdown from './scratch-markdown.jsx';
 
 const SpeechBubbleManual = ({tipsIsOn, soundIsOn, func}) => {
     if (!tipsIsOn) return null;
@@ -49,7 +48,10 @@ const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
     return (
         <div className={styles.speechBubble}>
             <section className={styles.nestedListGrid}>
-                <p>{tip}</p>
+                <ScratchMarkdown
+                    markdownText={`${tip} <br/> <h1><b>Testeee</b></h1>`}
+                />
+                {/* <p>{tip}</p>*/}
             </section>
         </div>
     );
