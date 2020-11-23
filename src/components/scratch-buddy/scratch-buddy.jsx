@@ -40,7 +40,7 @@ const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
     if (!tipsIsOn) return null;
 
     if (soundIsOn) {
-        scratchSpeechSynthesis(tip);
+        scratchSpeechSynthesis(tip.text);
     }
 
     setTimeout(func, (secondsOpen * 1000));
@@ -49,9 +49,8 @@ const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
         <div className={styles.speechBubble}>
             <section className={styles.nestedListGrid}>
                 <ScratchMarkdown
-                    markdownText={`${tip} <br/> <h1><b>Testeee</b></h1>`}
+                    markdownText={tip.markdownText}
                 />
-                {/* <p>{tip}</p>*/}
             </section>
         </div>
     );
@@ -59,14 +58,15 @@ const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
 
 SpeechBubbleDynamic.propTypes = {
     tipsIsOn: PropTypes.bool,
-    tip: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    tip: PropTypes.object,
     soundIsOn: PropTypes.bool,
     secondsOpen: PropTypes.number,
     func: PropTypes.func
 };
 
 SpeechBubbleDynamic.defaultProps = {
-    tip: '',
+    tip: {},
     secondsOpen: 5
 };
 
@@ -107,7 +107,7 @@ class ScratchBuddy extends React.Component {
         this.state = {
             speechBubbleManualOpen: false,
             speechBubbleDynamicOpen: false,
-            dynamicTip: '',
+            dynamicTip: {},
             soundIsOn: true,
             tipsIsOn: true,
             oldState: ''
@@ -136,12 +136,27 @@ class ScratchBuddy extends React.Component {
                 // handle error
             });
 
+        // PEGA MENSAGEM DE 'FORA DA ÁREA PERMITIDA' AQUI, CASO PRECISE USAR
+
+
         // VERIFICA SE ALGUMA PEÇA FOI MOVIDA OU INSERIDA
         window.setInterval(() => {
             const lastBlockInserted = localStorage.getItem('lastBlockInserted');
             const lastBlockMessage = localStorage.getItem('lastBlockMessage');
             const blocksArray = localStorage.getItem('blocks');
+            const isOutside = localStorage.getItem('outside');
+
             let blockTimesMoved = 0;
+
+            if (isOutside) {
+
+                this.setState({
+                    dynamicTip: {id: 0, text: 'Fora da área permitida', markdownText: 'Fora da área permitida', secondsUntilDisplay: 5, secondsDisplaying: 5},
+                    speechBubbleDynamicOpen: true
+                });
+
+                localStorage.removeItem('outside');
+            }
 
             if (blocksArray) {
                 blockTimesMoved = JSON.parse(blocksArray).find(block =>
@@ -159,12 +174,25 @@ class ScratchBuddy extends React.Component {
 
                         const tip = JSON.parse(lastBlockInserted);
 
-                        this.setState({
-                            dynamicTip: tip.opcode,
-                            speechBubbleDynamicOpen: true
-                        });
+                        api.get(`/dynamic-tips/${tip.opcode}`)
+                            .then(response => {
+                                const {dynamicTip} = response.data;
 
-                        // FAZ CHAMADA API
+                                console.log('DYNAMICTIP=>', dynamicTip);
+
+                                if (dynamicTip) {
+                                    this.setState({
+                                        dynamicTip: dynamicTip,
+                                        speechBubbleDynamicOpen: true
+                                    });
+                                }
+
+                            })
+                            .catch(error => {
+                                this.setState({
+                                    speechBubbleDynamicOpen: false
+                                });
+                            });
 
                     }
 
@@ -208,22 +236,17 @@ class ScratchBuddy extends React.Component {
     }
 
     closeDynamicBubble () {
-
         this.setState({
             speechBubbleDynamicOpen: false
         });
         scratchSpeechSynthesis('', true);
-
         return;
     }
 
     closeManualBubble () {
-
         this.setState({
             speechBubbleManualOpen: false
         });
-
-
     }
 
     render () {
