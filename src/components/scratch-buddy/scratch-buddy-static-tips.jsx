@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
+
 
 import api from './api';
 import styles from './scratch-buddy-static-tips.css';
 import ScratchBuddySpinner from '../scratch-buddy-spinner/scratch-buddy-spinner.jsx';
+import ScratchMarkdown from './scratch-markdown.jsx';
 
 class ScratchBuddyStaticTips extends React.Component {
     constructor (props) {
@@ -36,8 +37,8 @@ class ScratchBuddyStaticTips extends React.Component {
                         (<div key={item.id}>
                             <img
                                 className={styles.tip}
-                                heigth={'50'}
-                                width={'50'}
+                                heigth={'30'}
+                                width={'30'}
                                 src={`${item.file.path}${item.file.name}`}
                                 onClick={() => this.handleClick(item.markdownText, item.text)}
                             />
@@ -99,7 +100,8 @@ class ScratchBuddyStaticTips extends React.Component {
                                     >{'X'}</button>
                                 </div>
                                 <div>
-                                    <ReactMarkdown source={this.state.selectedTipMarkdowntext} />
+                                    <ScratchMarkdown markdownText={this.state.selectedTipMarkdowntext} />
+                                    {/* <ReactMarkdown source={this.state.selectedTipMarkdowntext} />*/}
                                 </div>
                             </>) : (<>
                                 <div className={styles.buttonDiv}>
