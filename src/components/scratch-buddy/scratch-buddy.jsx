@@ -35,21 +35,23 @@ SpeechBubbleManual.propTypes = {
     func: PropTypes.func
 };
 
-const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
+const SpeechBubbleDynamic = ({tipsIsOn, speech, markdownText, soundIsOn, secondsOpen, func}) => {
     // MOSTRA MENSAGEM POR X SEGUNDOS, CONFORME DEFINIDO NO REGISTRO DO BANCO
     if (!tipsIsOn) return null;
 
     if (soundIsOn) {
-        scratchSpeechSynthesis(tip.text);
+        scratchSpeechSynthesis(speech);
     }
 
-    setTimeout(func, (secondsOpen * 1000));
+    console.log('TIME=>', secondsOpen);
+
+    setTimeout(func, secondsOpen);
 
     return (
         <div className={styles.speechBubble}>
             <section className={styles.nestedListGrid}>
                 <ScratchMarkdown
-                    markdownText={tip.markdownText}
+                    markdownText={markdownText}
                 />
             </section>
         </div>
@@ -58,8 +60,8 @@ const SpeechBubbleDynamic = ({tipsIsOn, tip, soundIsOn, secondsOpen, func}) => {
 
 SpeechBubbleDynamic.propTypes = {
     tipsIsOn: PropTypes.bool,
-    // eslint-disable-next-line react/forbid-prop-types
-    tip: PropTypes.object,
+    speech: PropTypes.string,
+    markdownText: PropTypes.string,
     soundIsOn: PropTypes.bool,
     secondsOpen: PropTypes.number,
     func: PropTypes.func
@@ -151,60 +153,66 @@ class ScratchBuddy extends React.Component {
             if (isOutside) {
 
                 this.setState({
-                    dynamicTip: {id: 0, text: 'Fora da área permitida', markdownText: 'Fora da área permitida', secondsUntilDisplay: 5, secondsDisplaying: 5},
+                    dynamicTip: {
+                        id: 0,
+                        text: 'Fora da área permitida',
+                        markdownText: 'Fora da área permitida',
+                        secondsUntilDisplay: 5,
+                        secondsDisplaying: 5000
+                    },
                     speechBubbleDynamicOpen: true
                 });
 
                 localStorage.removeItem('outside');
-            }
-
-            if (blocksArray) {
-                blockTimesMoved = JSON.parse(blocksArray).find(block =>
-                    block.id === JSON.parse(lastBlockInserted).id
-                );
             } else {
-                blockTimesMoved = 0;
-            }
 
-            if (blockTimesMoved && blockTimesMoved.timesMoved === 1) {
-                if (!this.state.speechBubbleManualOpen && !this.state.speechBubbleDynamicOpen){
-
-                    if (lastBlockInserted !== lastBlockMessage) {
-                        localStorage.setItem('lastBlockMessage', lastBlockInserted);
-
-                        const tip = JSON.parse(lastBlockInserted);
-
-                        api.get(`/dynamic-tips/${tip.opcode}`)
-                            .then(response => {
-                                const {dynamicTip} = response.data;
-
-                                console.log('DYNAMICTIP=>', dynamicTip);
-
-                                if (dynamicTip) {
-                                    this.setState({
-                                        dynamicTip: dynamicTip,
-                                        speechBubbleDynamicOpen: true
-                                    });
-                                }
-
-                            })
-                            .catch(error => {
-                                this.setState({
-                                    speechBubbleDynamicOpen: false
-                                });
-                            });
-
-                    }
-
+                if (blocksArray) {
+                    blockTimesMoved = JSON.parse(blocksArray).find(block =>
+                        block.id === JSON.parse(lastBlockInserted).id
+                    );
                 } else {
-                    localStorage.setItem('lastBlockMessage', lastBlockInserted);
+                    blockTimesMoved = 0;
                 }
-            }
 
-            if (this.state.speechBubbleManualOpen){
-                this.setState({
-                    speechBubbleDynamicOpen: false
-                });
+                if (blockTimesMoved && blockTimesMoved.timesMoved === 1) {
+                    if (!this.state.speechBubbleManualOpen && !this.state.speechBubbleDynamicOpen){
+
+                        if (lastBlockInserted !== lastBlockMessage) {
+                            localStorage.setItem('lastBlockMessage', lastBlockInserted);
+
+                            const tip = JSON.parse(lastBlockInserted);
+
+                            api.get(`/dynamic-tips/${tip.opcode}`)
+                                .then(response => {
+                                    const {dynamicTip, readingTime} = response.data;
+                                    dynamicTip.readingTime = readingTime;
+
+                                    if (dynamicTip) {
+                                        this.setState({
+                                            dynamicTip: dynamicTip,
+                                            speechBubbleDynamicOpen: true
+                                        });
+                                    }
+
+                                })
+                                .catch(error => {
+                                    this.setState({
+                                        speechBubbleDynamicOpen: false
+                                    });
+                                });
+
+                        }
+
+                    } else {
+                        localStorage.setItem('lastBlockMessage', lastBlockInserted);
+                    }
+                }
+
+                if (this.state.speechBubbleManualOpen){
+                    this.setState({
+                        speechBubbleDynamicOpen: false
+                    });
+                }
             }
 
         }, 1000);
@@ -267,9 +275,10 @@ class ScratchBuddy extends React.Component {
                                     (this.state.speechBubbleDynamicOpen ?
                                         <SpeechBubbleDynamic
                                             tipsIsOn={this.state.tipsIsOn}
-                                            tip={this.state.dynamicTip}
+                                            speech={this.state.dynamicTip.text}
+                                            markdownText={this.state.dynamicTip.markdownText}
                                             soundIsOn={this.state.soundIsOn}
-                                            secondsOpen={3}
+                                            secondsOpen={this.state.dynamicTip.readingTime || this.state.dynamicTip.secondsDisplaying}
                                             func={this.closeDynamicBubble}
                                         /> :
                                         null
