@@ -146,6 +146,6 @@
     "axios": "^0.20.0",
     "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
-    "scratch-vm": "github:FelipeBit/scratch-vm#scratch-vm.git"
+    "scratch-vm": "github:FelipeBit/scratch-vm#homolog"
   }
 }
