@@ -37,8 +37,8 @@ class ScratchBuddyStaticTips extends React.Component {
                         (<div key={item.id}>
                             <img
                                 className={styles.tip}
-                                heigth={'30'}
-                                width={'30'}
+                                heigth={'50'}
+                                width={'50'}
                                 src={`${item.file.path}${item.file.name}`}
                                 onClick={() => this.handleClick(item.markdownText, item.text)}
                             />

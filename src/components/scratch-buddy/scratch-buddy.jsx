@@ -182,6 +182,8 @@ class ScratchBuddy extends React.Component {
 
                             const tip = JSON.parse(lastBlockInserted);
 
+                            console.log('TIP CODE', tip.opcode);
+
                             api.get(`/dynamic-tips/${tip.opcode}`)
                                 .then(response => {
                                     const {dynamicTip, readingTime} = response.data;
