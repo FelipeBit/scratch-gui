@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/prefer-stateless-function */
 
 import React from 'react';
@@ -42,8 +43,6 @@ const SpeechBubbleDynamic = ({tipsIsOn, speech, markdownText, soundIsOn, seconds
     if (soundIsOn) {
         scratchSpeechSynthesis(speech);
     }
-
-    console.log('TIME=>', secondsOpen);
 
     setTimeout(func, secondsOpen);
 
@@ -133,13 +132,7 @@ class ScratchBuddy extends React.Component {
                     return;
                 }
 
-            })
-            .catch(error => {
-                // handle error
             });
-
-        // PEGA MENSAGEM DE 'FORA DA ÁREA PERMITIDA' AQUI, CASO PRECISE USAR
-
 
         // VERIFICA SE ALGUMA PEÇA FOI MOVIDA OU INSERIDA
         window.setInterval(() => {
@@ -182,8 +175,6 @@ class ScratchBuddy extends React.Component {
 
                             const tip = JSON.parse(lastBlockInserted);
 
-                            console.log('TIP CODE', tip.opcode);
-
                             api.get(`/dynamic-tips/${tip.opcode}`)
                                 .then(response => {
                                     const {dynamicTip, readingTime} = response.data;
@@ -197,7 +188,7 @@ class ScratchBuddy extends React.Component {
                                     }
 
                                 })
-                                .catch(error => {
+                                .catch(() => {
                                     this.setState({
                                         speechBubbleDynamicOpen: false
                                     });

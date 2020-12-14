@@ -247,7 +247,6 @@ class Blocks extends React.Component {
     }
 
     attachVM () {
-        console.log('listener', this.props.vm.blockListener);
         this.workspace.addChangeListener(this.props.vm.blockListener);
         this.flyoutWorkspace = this.workspace
             .getFlyout()
@@ -399,7 +398,6 @@ class Blocks extends React.Component {
     handleExtensionAdded (categoryInfo) {
         const defineBlocks = blockInfoArray => {
             // to-do
-            console.log('blockinfo=>', blockInfoArray);
             if (blockInfoArray && blockInfoArray.length > 0) {
                 const staticBlocksJson = [];
                 const dynamicBlocksInfo = [];
@@ -502,7 +500,6 @@ class Blocks extends React.Component {
         ws.toolbox_.scrollToCategoryById('myBlocks');
     }
     handleDrop (dragInfo) {
-        console.log('drag=>', dragInfo);
         fetch(dragInfo.payload.bodyUrl)
             .then(response => response.json())
             .then(blocks => this.props.vm.shareBlocksToTarget(blocks, this.props.vm.editingTarget.id))

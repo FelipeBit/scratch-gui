@@ -11,10 +11,6 @@ const scratchSpeechSynthesis = (tip, pause = false) => {
         const utterance = new SpeechSynthesisUtterance();
         const utterance2 = new SpeechSynthesisUtterance();
 
-
-        console.log('DICA', tip);
-        console.log('TAMANHO', tip.length);
-
         // utterance.text = tip;
         utterance.lang = 'pt-br';
         utterance.pitch = 3;

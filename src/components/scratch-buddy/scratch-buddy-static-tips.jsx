@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -47,9 +48,6 @@ class ScratchBuddyStaticTips extends React.Component {
 
                 this.setState({tipsList});
 
-            })
-            .catch(error => {
-                // handle error
             })
             .then(() => {
                 this.setState({isLoading: false});

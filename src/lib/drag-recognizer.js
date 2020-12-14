@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import bindAll from 'lodash.bindall';
 import {getEventXY} from '../lib/touch-utils';
 
@@ -72,7 +73,6 @@ class DragRecognizer {
 
     _handleMove (event) {
         // For gestures identified as vertical scrolls, do not process movement events++++++++++++++++++++++++++++++++++++++++++
-        console.log('event=>', event);
         if (this._isScroll()) return;
 
         const currentOffset = getEventXY(event);
